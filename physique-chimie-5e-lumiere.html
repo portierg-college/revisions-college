@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La propagation de la lumière — 5e — Le Carnet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F4EE;
+    --paper-line:#DCD8CB;
+    --ink:#1E2422;
+    --ink-soft:#5B6560;
+    --techno:#2E5C8A;
+    --techno-soft:#E4ECF3;
+    --sciences:#2F7B63;
+    --sciences-soft:#E3EFE9;
+    --accent:#D98A2B;
+    --accent-soft:#FAEBD4;
+    --white:#FFFFFF;
+    --radius:3px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size:28px 28px;
+    color:var(--ink);
+    font-family:'Source Serif 4', serif;
+    line-height:1.55;
+  }
+  h1,h2,h3,.mono{font-family:'Space Grotesk', sans-serif;}
+  .tag{font-family:'JetBrains Mono', monospace; letter-spacing:0.03em;}
+
+  header{
+    position:sticky; top:0; z-index:20;
+    background:rgba(246,244,238,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:2px solid var(--ink);
+  }
+  .header-inner{
+    max-width:820px; margin:0 auto; padding:14px 20px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .brand{display:flex; align-items:baseline; gap:8px; text-decoration:none; color:var(--ink);}
+  .brand-mark{
+    width:30px;height:30px; border:2px solid var(--ink); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono'; font-size:13px; font-weight:600;
+    background:var(--accent-soft);
+  }
+  .brand-name{font-size:18px; font-weight:700; letter-spacing:-0.01em;}
+  .brand-sub{font-family:'JetBrains Mono'; font-size:11px; color:var(--ink-soft); margin-left:4px;}
+
+  main{max-width:820px; margin:0 auto; padding:32px 20px 80px;}
+
+  .breadcrumb{font-family:'JetBrains Mono'; font-size:12px; color:var(--ink-soft); margin-bottom:20px;}
+  .breadcrumb a{color:var(--ink-soft); text-decoration:none;}
+  .breadcrumb a:hover{color:var(--ink); text-decoration:underline;}
+
+  .fiche-header{border-bottom:2px solid var(--ink); padding-bottom:20px; margin-bottom:28px;}
+  .eyebrow{
+    display:inline-block; font-family:'JetBrains Mono'; font-size:11.5px; text-transform:uppercase;
+    letter-spacing:0.06em; color:var(--sciences); background:var(--sciences-soft);
+    padding:3px 10px; border-radius:12px; margin-bottom:12px;
+  }
+  .fiche-header h1{font-size:30px; margin:0 0 8px; line-height:1.1;}
+  .fiche-header .meta{font-family:'JetBrains Mono'; font-size:12px; color:var(--ink-soft);}
+
+  section.cours{margin-bottom:26px;}
+  section.cours h2{
+    font-size:18px; display:flex; align-items:center; gap:10px; margin:0 0 12px;
+  }
+  section.cours h2 .num{
+    font-family:'JetBrains Mono'; font-size:12px; color:var(--white); background:var(--sciences);
+    width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .card{
+    background:var(--white); border:1px solid var(--paper-line); border-radius:var(--radius);
+    padding:18px 20px;
+  }
+  .card p{margin:0 0 10px; font-size:15px;}
+  .card p:last-child{margin-bottom:0;}
+  .card ul{margin:0; padding-left:20px; font-size:15px;}
+  .card li{margin-bottom:6px;}
+
+  .definition{
+    border-left:3px solid var(--sciences); background:var(--sciences-soft);
+    padding:12px 16px; border-radius:0 var(--radius) var(--radius) 0; margin:14px 0;
+  }
+  .definition .label{font-family:'JetBrains Mono'; font-size:11px; text-transform:uppercase; color:var(--sciences); display:block; margin-bottom:4px;}
+  .definition p{font-size:14.5px; margin:0;}
+
+  .schema-box{
+    border:1.5px dashed var(--ink-soft); border-radius:var(--radius); padding:20px;
+    text-align:center; margin:16px 0; background:rgba(255,255,255,0.4);
+  }
+  .schema-box svg{max-width:100%; height:auto;}
+  .schema-caption{font-family:'JetBrains Mono'; font-size:11.5px; color:var(--ink-soft); margin-top:8px;}
+
+  .experience{
+    border:1.5px solid var(--accent); background:var(--accent-soft); border-radius:var(--radius);
+    padding:16px 18px; margin:14px 0;
+  }
+  .experience .label{font-family:'JetBrains Mono'; font-size:11px; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:6px;}
+  .experience p{font-size:14.5px; margin:0 0 6px;}
+  .experience p:last-child{margin-bottom:0;}
+
+  .retenir{
+    background:var(--ink); color:var(--paper); border-radius:var(--radius); padding:20px 22px; margin:30px 0;
+  }
+  .retenir h2{color:var(--paper); font-size:16px; margin:0 0 10px;}
+  .retenir ul{margin:0; padding-left:18px; font-size:14.5px;}
+  .retenir li{margin-bottom:6px;}
+
+  /* QUIZ */
+  .quiz-section{border-top:2px solid var(--ink); padding-top:26px; margin-top:34px;}
+  .quiz-section > h2{font-size:22px; margin:0 0 4px;}
+  .quiz-section > .subtitle{font-family:'JetBrains Mono'; font-size:12px; color:var(--ink-soft); margin-bottom:18px; display:block;}
+  .quiz-progress{font-family:'JetBrains Mono'; font-size:12px; color:var(--ink-soft); margin-bottom:10px;}
+  .quiz-card{background:var(--white); border:2px solid var(--ink); border-radius:var(--radius); padding:26px;}
+  .quiz-q{font-size:17px; font-family:'Space Grotesk'; font-weight:600; margin-bottom:18px;}
+  .quiz-opt{
+    display:block; width:100%; text-align:left; padding:12px 14px; margin-bottom:10px;
+    border:1.5px solid var(--paper-line); border-radius:var(--radius); background:var(--paper);
+    cursor:pointer; font-family:'Source Serif 4'; font-size:15px; color:var(--ink);
+  }
+  .quiz-opt:hover{border-color:var(--ink);}
+  .quiz-opt.correct{border-color:var(--sciences); background:var(--sciences-soft);}
+  .quiz-opt.wrong{border-color:#B5473B; background:#F7E4E1;}
+  .quiz-footer{display:flex; justify-content:space-between; align-items:center; margin-top:20px;}
+  .quiz-score{font-family:'JetBrains Mono'; font-size:13px;}
+  .cta{
+    display:inline-flex; align-items:center; gap:8px; background:var(--ink); color:var(--paper);
+    padding:11px 18px; border-radius:var(--radius); text-decoration:none; font-family:'Space Grotesk';
+    font-weight:600; font-size:14px; cursor:pointer; border:none;
+  }
+
+  footer{border-top:2px solid var(--ink); padding:20px; text-align:center; margin-top:40px;}
+  footer p{font-family:'JetBrains Mono'; font-size:11px; color:var(--ink-soft); margin:0;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">TC</span>
+      <span class="brand-name">Le Carnet</span>
+      <span class="brand-sub">révisions techno &amp; sciences</span>
+    </a>
+  </div>
+</header>
+
+<main>
+  <div class="breadcrumb"><a href="index.html">Accueil</a> / Physique-Chimie / La propagation de la lumière</div>
+
+  <div class="fiche-header">
+    <span class="eyebrow">Physique-Chimie · 5e · Optique</span>
+    <h1>La propagation de la lumière</h1>
+    <div class="meta">FICHE 01 · DURÉE DE LECTURE ≈ 6 MIN</div>
+  </div>
+
+  <section class="cours">
+    <h2><span class="num">1</span>Les sources de lumière</h2>
+    <div class="card">
+      <p>Un objet qui produit sa propre lumière est appelé une <strong>source primaire</strong> (ou source de lumière). Un objet qui ne fait que renvoyer la lumière qu'il reçoit est appelé une <strong>source secondaire</strong>.</p>
+      <div class="definition">
+        <span class="label">Définition</span>
+        <p><strong>Source primaire :</strong> objet qui émet sa propre lumière (le Soleil, une ampoule allumée, une flamme).<br>
+        <strong>Source secondaire :</strong> objet visible uniquement parce qu'il reçoit et renvoie la lumière d'une source primaire (la Lune, une feuille de papier, ce livre).</p>
+      </div>
+      <p>Sans aucune source primaire dans une pièce, il fait nuit noire : aucun objet n'y est visible, même les sources secondaires.</p>
+    </div>
+  </section>
+
+  <section class="cours">
+    <h2><span class="num">2</span>La propagation rectiligne de la lumière</h2>
+    <div class="card">
+      <p>Dans un milieu transparent et homogène (comme l'air ou le vide), la lumière se propage <strong>en ligne droite</strong>. On représente ce trajet par un <strong>rayon lumineux</strong>, dessiné comme une droite fléchée indiquant le sens de propagation.</p>
+
+      <div class="schema-box">
+        <svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="60" r="14" fill="#D98A2B"/>
+          <line x1="54" y1="60" x2="330" y2="60" stroke="#1E2422" stroke-width="2" marker-end="url(#arrow)"/>
+          <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L9,3 z" fill="#1E2422"/>
+            </marker>
+          </defs>
+          <rect x="340" y="35" width="30" height="50" fill="#2F7B63" opacity="0.8"/>
+          <text x="40" y="95" font-family="JetBrains Mono" font-size="11" fill="#5B6560" text-anchor="middle">Source</text>
+          <text x="355" y="105" font-family="JetBrains Mono" font-size="11" fill="#5B6560" text-anchor="middle">Écran</text>
+        </svg>
+        <div class="schema-caption">Un rayon lumineux se représente par une droite fléchée</div>
+      </div>
+
+      <p>Cette propriété explique pourquoi on ne voit pas autour des obstacles : c'est la propagation rectiligne qui est à l'origine des <strong>ombres</strong>.</p>
+    </div>
+  </section>
+
+  <section class="cours">
+    <h2><span class="num">3</span>Objets transparents, translucides, opaques</h2>
+    <div class="card">
+      <ul>
+        <li><strong>Transparent :</strong> laisse passer la lumière et permet de voir nettement à travers (le verre, l'eau claire).</li>
+        <li><strong>Translucide :</strong> laisse passer une partie de la lumière mais ne permet pas de voir nettement à travers (le papier calque, le verre dépoli).</li>
+        <li><strong>Opaque :</strong> ne laisse pas passer la lumière (un mur, une planche de bois, une main).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cours">
+    <h2><span class="num">4</span>Ombre propre et ombre portée</h2>
+    <div class="card">
+      <p>Quand un objet opaque est éclairé par une source primaire, il empêche la lumière de continuer sa trajectoire :</p>
+      <div class="definition">
+        <span class="label">Définition</span>
+        <p><strong>Ombre propre :</strong> partie de l'objet qui n'est pas éclairée directement par la source.<br>
+        <strong>Ombre portée :</strong> zone sombre projetée sur un écran ou une surface, derrière l'objet.</p>
+      </div>
+      <div class="experience">
+        <span class="label">🔬 Expérience à refaire</span>
+        <p>Placez une lampe de poche, un objet opaque (une gomme) et un écran (une feuille blanche) alignés sur une table.</p>
+        <p>Rapprochez la lampe de l'objet : que devient la taille de l'ombre portée ? Éloignez-la : que se passe-t-il ?</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cours">
+    <h2><span class="num">5</span>La vitesse de la lumière</h2>
+    <div class="card">
+      <p>La lumière se propage extrêmement vite, mais pas de façon instantanée.</p>
+      <div class="definition">
+        <span class="label">À retenir</span>
+        <p>Dans le vide (et approximativement dans l'air), la lumière parcourt <strong>300 000 km par seconde</strong>. À cette vitesse, elle fait le tour de la Terre 7 fois en une seconde.</p>
+      </div>
+      <p>C'est pour cette raison que la lumière du Soleil, émise à environ 150 millions de km de la Terre, met un peu plus de 8 minutes à nous parvenir.</p>
+    </div>
+  </section>
+
+  <div class="retenir">
+    <h2>✎ Ce qu'il faut absolument retenir</h2>
+    <ul>
+      <li>Source primaire = émet sa propre lumière · source secondaire = renvoie la lumière reçue</li>
+      <li>La lumière se propage en ligne droite dans un milieu transparent et homogène</li>
+      <li>Un rayon lumineux se dessine comme une droite fléchée</li>
+      <li>Objet opaque + source de lumière → ombre propre et ombre portée</li>
+      <li>Vitesse de la lumière dans le vide ≈ 300 000 km/s</li>
+    </ul>
+  </div>
+
+  <div class="quiz-section">
+    <h2>Quiz d'auto-évaluation</h2>
+    <span class="subtitle">5 QUESTIONS · CORRECTION IMMÉDIATE</span>
+    <div id="quiz-app"></div>
+  </div>
+</main>
+
+<footer>
+  <p>FICHE DE RÉVISION — TECHNOLOGIE &amp; PHYSIQUE-CHIMIE</p>
+</footer>
+
+<script>
+const QUIZ = [
+  {q:"Le Soleil est une source de lumière...", options:["Secondaire","Primaire","Ni l'une ni l'autre","Les deux à la fois"], correct:1},
+  {q:"Dans un milieu transparent et homogène, la lumière se propage...", options:["En courbe","En zigzag","En ligne droite","De façon aléatoire"], correct:2},
+  {q:"Comment appelle-t-on un objet qui laisse passer la lumière sans permettre de voir nettement à travers ?", options:["Transparent","Translucide","Opaque","Réfléchissant"], correct:1},
+  {q:"La zone sombre projetée sur un écran derrière un objet éclairé s'appelle :", options:["L'ombre propre","Le halo","L'ombre portée","La pénombre totale"], correct:2},
+  {q:"Quelle est la vitesse de la lumière dans le vide ?", options:["300 km/s","30 000 km/s","300 000 km/s","3 000 000 km/s"], correct:2},
+];
+
+let state = {index:0, score:0, answered:false};
+
+function renderQuiz(){
+  const app = document.getElementById('quiz-app');
+  const total = QUIZ.length;
+  if(state.index >= total){
+    app.innerHTML = `
+      <div class="quiz-card" style="text-align:center;">
+        <h2 style="margin-top:0; font-size:20px;">Quiz terminé</h2>
+        <p style="font-size:34px; font-family:'Space Grotesk'; margin:10px 0;">${state.score} / ${total}</p>
+        <p style="color:var(--ink-soft); font-size:14px;">${state.score===total ? "Score parfait, bravo !" : "Relisez les points non maîtrisés avant de recommencer."}</p>
+        <button class="cta" style="margin-top:14px;" onclick="state={index:0,score:0,answered:false}; renderQuiz();">Recommencer le quiz</button>
+      </div>
+    `;
+    return;
+  }
+  const q = QUIZ[state.index];
+  app.innerHTML = `
+    <div class="quiz-progress">QUESTION ${state.index+1} / ${total}</div>
+    <div class="quiz-card">
+      <div class="quiz-q">${q.q}</div>
+      ${q.options.map((opt,i)=>`<button class="quiz-opt" onclick="answer(${i})">${opt}</button>`).join('')}
+      <div class="quiz-footer">
+        <span class="quiz-score">Score : ${state.score}</span>
+        <button class="cta" id="next-btn" style="display:none;" onclick="next()">Question suivante →</button>
+      </div>
+    </div>
+  `;
+}
+
+function answer(i){
+  if(state.answered) return;
+  state.answered = true;
+  const q = QUIZ[state.index];
+  document.querySelectorAll('.quiz-opt').forEach((btn,idx)=>{
+    if(idx===q.correct) btn.classList.add('correct');
+    else if(idx===i) btn.classList.add('wrong');
+  });
+  if(i===q.correct) state.score++;
+  document.getElementById('next-btn').style.display = 'inline-flex';
+  document.querySelector('.quiz-score').textContent = 'Score : ' + state.score;
+}
+
+function next(){
+  state.index++;
+  state.answered = false;
+  renderQuiz();
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
